@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+header {
+  font-size: 5vmin;
+  color: pink;
+  letter-spacing: 1vmin;
+}
+
+h1 {
+  color: pink;
+  font-size: 3vmin;
+  margin-top: 3vmin;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(3, 10vmin);
+  grid-template-rows: repeat(3, 10vmin);
+  gap: 1vmin;
+  margin-top: 2vmin;
+}
+
+#board > div {
+  border-radius: 50%;
+  border: 0.1vmin solid pink;
+}
+
+button {
+  padding: 5px;
+  margin-top: 4vmin;
+  background-color: pink;
+  color: black;
+  border-radius: 30%;
+  border: 0.1vmin solid pink;
+}
+
+button:hover {
+  background-color: palevioletred;
+  color: black;
+  border: palevioletred;
+}
