@@ -4,6 +4,10 @@ const COLORS = {
   1: "tomato",
   "-1": "pink",
 };
+const TOP_ROW_IDX = 0;
+const BOT_ROW_IDX = 2;
+const RIGHT_COLUMN_IDX = 2;
+const LEFT_COLUMN_IDX = 0;
 
 /*----- state variables -----*/
 let board; // array of 7 column arrays
@@ -85,12 +89,65 @@ function handleClick(evt) {
   board[colIdx][rowIdx] = turn;
 
   turn *= -1;
-  // winner = getWinner(colIdx, rowIdx);
+  winner = getWinner(colIdx, rowIdx);
+  console.log(winner);
 
   render();
 }
 
-function getWinner(colIdx, rowIdx) {}
+function getWinner(colIdx, rowIdx) {
+  return (
+    checkVerticalWin(colIdx, rowIdx) ||
+    checkHorizontalWin(colIdx, rowIdx) ||
+    checkDiagonalNESW(colIdx, rowIdx) ||
+    checkDiagonalNWSE(colIdx, rowIdx)
+  );
+}
+
+function checkDiagonalNWSE(colIdx, rowIdx) {
+  if (board[1][1] === 0) return null;
+  return board[0][0] === board[1][1] && board[1][1] === board[2][2]
+    ? board[colIdx][rowIdx]
+    : null;
+}
+
+function checkDiagonalNESW(colIdx, rowIdx) {
+  if (board[1][1] === 0) return null;
+  return board[0][2] === board[1][1] && board[1][1] === board[2][0]
+    ? board[colIdx][rowIdx]
+    : null;
+}
+
+function checkHorizontalWin(colIdx, rowIdx) {
+  return countAdjacent(RIGHT_COLUMN_IDX, rowIdx, -1, 0) === 2
+    ? board[colIdx][rowIdx]
+    : null;
+}
+
+function checkVerticalWin(colIdx, rowIdx) {
+  return countAdjacent(colIdx, BOT_ROW_IDX, 0, -1) === 2
+    ? board[colIdx][rowIdx]
+    : null;
+}
+
+function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
+  const player = board[colIdx][rowIdx];
+  let count = 0;
+  colIdx += colOffset;
+  rowIdx += rowOffset;
+
+  while (
+    board[colIdx] !== undefined &&
+    board[colIdx][rowIdx] !== undefined &&
+    board[colIdx][rowIdx] === player
+  ) {
+    count++;
+    colIdx += colOffset;
+    rowIdx += rowOffset;
+  }
+
+  return count;
+}
 
 function render() {
   renderBoard();
@@ -99,13 +156,18 @@ function render() {
 }
 
 function renderBoard() {
+  let count = 0;
+
   board.forEach(function (colArr, colIdx) {
     colArr.forEach(function (cellVal, rowIdx) {
+      if (colArr[rowIdx] === 0) count++;
       const cellId = `c${colIdx}r${rowIdx}`;
       const cellEl = document.getElementById(cellId);
       cellEl.style.backgroundColor = COLORS[cellVal];
     });
   });
+
+  if (count === 0) winner = "T";
 }
 
 function renderMessage() {
